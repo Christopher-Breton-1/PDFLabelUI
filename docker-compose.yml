@@ -6,8 +6,8 @@ services:
       - "5672:5672" # rabbitmq broker port
       - "15672:15672" # rabbitmq management UI
     environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: password
+      RABBITMQ_DEFAULT_USER: ${RABBIT_MQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_MQ_PASSWORD}
 
   backend:
     build:
@@ -23,7 +23,7 @@ services:
       - pdfalto
       - rabbitmq
     environment:
-      - CELERY_BROKER_URL=amqp://user:password@rabbitmq:5672/
+      - CELERY_BROKER_URL=amqp://${RABBIT_MQ_USER}:${RABBIT_MQ_PASSWORD}@rabbitmq:5672/
       - CELERY_BACKEND_DB_NAME=celery_results.sqlite
       - PYTHONUNBUFFERED=1
       - SHARED_DIR=/shared  # set shared directory environment variable
@@ -40,7 +40,7 @@ services:
       - rabbitmq
       - backend
     environment:
-      CELERY_BROKER_URL: amqp://user:password@rabbitmq:5672/
+      CELERY_BROKER_URL: amqp://${RABBIT_MQ_USER}:${RABBIT_MQ_PASSWORD}@rabbitmq:5672/
       CELERY_BACKEND_DB_NAME: celery_results.sqlite
       SHARED_DIR: /shared
       SHARED_CELERY_DIR: /shared/celery_worker

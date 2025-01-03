@@ -3,3 +3,4 @@ alto_extract
 backend
 frontend
 shared
+.env
