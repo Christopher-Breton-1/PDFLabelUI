@@ -1,0 +1,64 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" # rabbitmq broker port
+      - "15672:15672" # rabbitmq management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/app
+      - ./shared:/shared  # shared volume for file exchange
+    ports:
+      - "8000:8000"
+    image: backend_image
+    depends_on:
+      - pdfalto
+      - rabbitmq
+    environment:
+      - CELERY_BROKER_URL=amqp://user:password@rabbitmq:5672/
+      - CELERY_BACKEND_DB_NAME=celery_results.sqlite
+      - PYTHONUNBUFFERED=1
+      - SHARED_DIR=/shared  # set shared directory environment variable
+      - SHARED_CELERY_DIR=/shared/celery_worker  # set shared directory environment variable
+
+  worker:
+    image: backend_image
+    container_name: celery_worker
+    command: celery -A celeryApp.celery_app worker --loglevel=info
+#    working_dir: /shared/celery_worker
+    volumes:
+      - ./shared:/shared
+    depends_on:
+      - rabbitmq
+      - backend
+    environment:
+      CELERY_BROKER_URL: amqp://user:password@rabbitmq:5672/
+      CELERY_BACKEND_DB_NAME: celery_results.sqlite
+      SHARED_DIR: /shared
+      SHARED_CELERY_DIR: /shared/celery_worker
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+
+  pdfalto:
+    build:
+      context: ./alto_extract
+      dockerfile: Dockerfile
+    volumes:
+      - ./alto_extract:/opt/pdfalto
+      - ./shared:/shared  # shared volume for file exchange
