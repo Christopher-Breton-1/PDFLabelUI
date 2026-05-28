@@ -1,3 +1,4 @@
 .env
 .idea
 .vscode
+shared/celery_worker/celery_results.sqlite
