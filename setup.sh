@@ -1,5 +1,6 @@
 #!/bin/bash
 
+## Do not use this file. Not useful
 # define repo URLs and folder names
 repos=(
   "https://github.com/Christopher-Breton-1/PDFLabelUIBackend.git backend"
