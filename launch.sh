@@ -37,7 +37,7 @@ command_exists() {
 
 # try to run docker-compose up
 echo "attempting to launch the app..."
-if ! docker-compose up -d --build; then
+if ! docker compose up -d --build; then
   echo "docker-compose failed. checking for docker and docker-compose installation..."
 
   # check for docker
@@ -46,13 +46,13 @@ if ! docker-compose up -d --build; then
   fi
 
   # check for docker-compose
-  if ! command_exists docker-compose; then
+  if ! command_exists docker compose; then
     install_docker_compose
   fi
 
   # retry docker-compose up
   echo "retrying to launch the app..."
-  if ! docker-compose up -d --build; then
+  if ! docker compose up -d --build; then
     echo "failed to launch the app after installation. please check for issues."
     exit 1
   fi
