@@ -2,9 +2,9 @@
 
 # define repo URLs and folder names
 repos=(
-  "https://github.com/chriscolisse/PDFLabelUIBackend.git backend"
-  "https://github.com/chriscolisse/PDFLabelUIFrontend.git frontend"
-  "https://github.com/chriscolisse/pdfAltoAPI.git alto_extract"
+  "https://github.com/Christopher-Breton-1/PDFLabelUIBackend.git backend"
+  "https://github.com/Christopher-Breton-1/PDFLabelUIFrontend.git frontend"
+  "https://github.com/Christopher-Breton-1/pdfAltoAPI.git alto_extract"
 )
 
 # pull or clone each repo
